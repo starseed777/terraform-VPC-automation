@@ -1,0 +1,45 @@
+"arn:aws:s3:::${access_logs_bucket}/AWSLogs/324877108806/*"
+"arn:aws:iam::324877108806:root"
+"arn:aws:s3:::${bucket_name}/${prefix}/AWSLogs/*"
+"arn:aws:iam::324877108806:root"
+
+{
+  "Version": "2012-10-17",
+  "Id": "alb-policy",
+  "Statement": [
+    {
+      "Sid": "root-access",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::127311923021:root"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::${access_logs_bucket}/${prefix}/324877108806/AWSLogs/*"
+    },
+    {
+      "Sid": "log-delivery",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "delivery.logs.amazonaws.com"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::${access_logs_bucket}/${prefix}/324877108806/AWSLogs/*",
+      "Condition": {
+        "StringEquals": {
+          "s3:x-amz-acl": "bucket-owner-full-control"
+        }
+      }
+    },
+    {
+     "Sid": "log-delivery-access-check",
+     "Effect": "Allow",
+     "Principal": {
+      "Service": "delivery.logs.amazonaws.com"
+    },
+    "Action": "s3:GetBucketAcl",
+    "Resource": "arn:aws:s3:::${access_logs_bucket}"
+  }
+  ]
+
+
+}
